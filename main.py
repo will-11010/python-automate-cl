@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """
-Main automation script using pyautoguifile_017
+Main automation script using pyautogui
 
 """
 
 import time
 import argparse
 import pyautogui
+from urllib.parse import urlparse
 
 # Safety features - enable fail-safe by moving mouse to corner
 pyautogui.FAILSAFE = True
@@ -19,12 +20,12 @@ def main(url):
     Args:
         url: Website URL to open in browser (initial page)
     """
-    print("Starting automation...")
+    print("Starting automation...") 
     print(f"Initial URL: {url}")
 
     # Variables of time
-    time_to_wait_for_page_load = 4  # Time to wait for page to load (adjust as needed)
-    time_to_waif_for_download = 4  # Time to wait for download to complete (adjust as needed)
+    time_to_wait_for_page_load = 9 # Time to wait for page to load (adjust as needed)
+    time_to_wait_for_download = 6  # Time to wait for download to complete (adjust as needed)
     
     # Get screen dimensions
     screen_width, screen_height = pyautogui.size()
@@ -49,6 +50,10 @@ def main(url):
     initial_url = url.rstrip('/')
     page_count = 0
 
+    # Extract prefix from URL hostname (e.g. www.estrellaarica.cl -> estrellaarica)
+    hostname = urlparse(url).hostname
+    prefix = hostname.split('.')[-2]
+
     # Loop through pages by clicking next button until URL changes back to initial
     while True:
         page_count += 1
@@ -60,7 +65,7 @@ def main(url):
 
         # Click on extension | TODO: Automate this part by finding the extension icon on the screen
         pyautogui.click(x=1303, y=62)
-        time.sleep(time_to_waif_for_download)
+        time.sleep(time_to_wait_for_download)
 
         # Download file | TODO: Automate this part by finding the download button on the screen
         print(pyautogui.position())
@@ -69,7 +74,7 @@ def main(url):
         pyautogui.click(x=1191, y=116)
         time.sleep(2)
         # Write page number as file name with 3 digits
-        pyautogui.write(f"file_{page_count - 1:03d}", interval=0.01)
+        pyautogui.write(f"{prefix}_{page_count:03d}", interval=0.01)
         pyautogui.press('enter')
         time.sleep(1)
 

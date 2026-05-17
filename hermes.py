@@ -7,6 +7,7 @@ Main automation script using pyautoguifile_017
 import time
 import argparse
 import pyautogui
+from urllib.parse import urlparse
 
 # Safety features - enable fail-safe by moving mouse to corner
 pyautogui.FAILSAFE = True
@@ -40,8 +41,8 @@ def main(url):
     print(f"Initial URL: {url}")
 
     # Variables of time
-    time_to_wait_for_page_load = 4  # Time to wait for page to load (adjust as needed)
-    time_to_wait_for_download = 4  # Time to wait for download to complete (adjust as needed)
+    time_to_wait_for_page_load = 5  # Time to wait for page to load (adjust as needed)
+    time_to_wait_for_download = 7  # Time to wait for download to complete (adjust as needed)
     
     # Get screen dimensions
     screen_width, screen_height = pyautogui.size()
@@ -67,6 +68,10 @@ def main(url):
     initial_url = url.rstrip('/')
     page_count = 0
 
+    # Extract prefix from URL hostname (e.g. www.estrellaarica.cl -> estrellaarica)
+    hostname = urlparse(url).hostname
+    prefix = hostname.split('.')[-2]
+
     # Loop through pages by clicking next button until URL changes back to initial
     while True:
         page_count += 1
@@ -91,7 +96,7 @@ def main(url):
         pyautogui.click(x=x, y=y)
         time.sleep(2)
         # Write page number as file name with 3 digits
-        pyautogui.write(f"file_{page_count - 1:03d}", interval=0.01)
+        pyautogui.write(f"{prefix}_{page_count:03d}", interval=0.01)
         pyautogui.press('enter')
         time.sleep(1)
 
